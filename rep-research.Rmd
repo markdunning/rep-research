@@ -208,7 +208,8 @@ plot(1:10, jitter(1:10))
 
 ## Running R code from the main text
 
-- We can add R code to our main text that is evaluated 
+- We can add R code to our main text, which gets evaluated
+    + make sure we always have the latest figures, p-values etc
 
 ```
 .....the sample population consisted of  'r table(gender)[1]' females and 'r table(gender)[2]' males.....
@@ -230,12 +231,12 @@ pval <- 0.05
 .....the p-value of the t-test is `r pval`, which indicates that.....
 
 ```
-.....After analysis with edgeR, the number of differentially expressed genes is 'r nrow(myresults)'....
+.....After analysis with edgeR, the number of differentially expressed genes was 'r nrow(myresults)'....
 ```
 ```{r echo=FALSE}
 myresults <- matrix(nrow=1245,ncol=2)
 ```
-.....After analysis with edgeR, the number of differentially expressed genes is `r nrow(myresults)`....
+.....After analysis with edgeR, the number of differentially expressed genes was `r nrow(myresults)`....
 
 
 ## Running R code from the main text
@@ -262,12 +263,12 @@ pval <- 0.1
 .....the p-value of the t-test is `r pval`, which indicates that.....
 
 ```
-.....After analysis with edgeR, the number of differentially expressed genes is 'r nrow(myresults)'....
+.....After analysis with edgeR, the number of differentially expressed genes was 'r nrow(myresults)'....
 ```
 ```{r echo=FALSE}
 myresults <- matrix(nrow=124,ncol=2)
 ```
-.....After analysis with edgeR, the number of differentially expressed genes is `r nrow(myresults)`....
+.....After analysis with edgeR, the number of differentially expressed genes was `r nrow(myresults)`....
 
 
 ## Conditional output
@@ -293,3 +294,12 @@ pval <- 0.01
 
 
 The statistical test was `r ifelse(pval < 0.05, "", "not")` significant
+
+
+## Printing vectors
+```
+The months of the year are 'r month.name'
+```
+
+The months of the year are `r month.name`
+
