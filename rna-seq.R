@@ -30,5 +30,3 @@ topTags(et)
 
 
 pasillaRes <- topTags(et,n=nrow(countTable))$table
-
-sessionInfo()
