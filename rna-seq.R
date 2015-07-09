@@ -27,6 +27,7 @@ y <- estimateCommonDisp(y)
 y <- estimateTagwiseDisp(y)
 et <- exactTest(y)
 topTags(et)
-
-
-pasillaRes <- topTags(et,n=nrow(countTable))$table
+summary(de <- decideTestsDGE(et, p=0.05))
+detags <- rownames(y)[as.logical(de)]
+plotSmear(et, de.tags=detags)
+abline(h = c(-2, 2), col = "blue")

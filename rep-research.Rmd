@@ -1,55 +1,69 @@
 ---
 title: "Reproducible Research"
 author: "Mark Dunning"
-date: "16/06/2015"
+date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
 output: slidy_presentation
 ---
 
-## Reproducible Research
+## Principles of Reproducible Research
 
 ![step-two](images/SidneyHarris_MiracleWeb.jpg)
 
 Sidney Harris - New York Times
 
-## What do we mean by Reproducible Research?
+## Why should we do reproducible research?
 
-- Being able to reproduce your own analysis at a later date
-- People from other labs being able to reproduce the analysis
-- Useful reference:
-http://christophergandrud.github.io/RepResR-RStudio/
+Five selfish reasons - Florian Markowetz [8th July 2015](http://bioinformatics-core-shared-training.github.io/rep-research-masterclass/florian/FlorianTalk.pptx)
+
+1. Avoid disaster
+2. Easier to write papers
+3. Easier to talk to reviewers
+4. Continuity of your work in the lab
+5. Reputation
+
 
 ##It is a hot topic at the moment
+
+- Statisticians at MD Anderson tried to reproduce results from a Duke paper and unintentionally unravelled a web of incompetence and skullduggery
+    + as reported in the ***New York Times***
+    
+![nyt-article](images/rep-research-nyt.png)
+
+##Hear the full account
+
+- Very entertaining talk from Keith Baggerly in Cambridge 2010
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/7gYIs7uYbMo" frameborder="0" allowfullscreen></iframe>
 
 
 ##What can we do about it?
 
+- Use scripts / R
+- Use version control
 - Document early
 - Document everything
 - Write comments and explanations
+- Automatically-generate your plots, tables, etc from the data
+    + always ensure that you have the latest version
 
-##Simple example
+##Simple example in RStudio
+- See `rna-seq.R`
+    + an analysis of a RNA-seq dataset using edgeR
 - Use the Compile Notebook button in RStudio
-- Take an R script and turn into HTML, Word or PDF
+- Take an R script and turn into HTML, PDF or even Word
 - All code will be displayed and the outputs printed
 - A compiled report will be generated in your working directory
 
 ![compile](images/RStudio-menu.png)
 
-## Listing version numbers etc
-
-- use the `sessionInfo()` function
-- Lets add this to the R scripts and see what happens
 
 
 ## What is going on?
 
 - The `knitr` package is being used convert the R script into 'markdown' format, which it then compiles into the output of your choosing
 - `knitr` is distributed with RStudio
-    + `knitr` is the modern-day equivalent of `sweave`
-- markdown is a 
-    + Rmarkdown is the R equivalent
+    + `knitr` is the modern-day equivalent of `Sweave`
+- markdown is a easy-to-read, easy-to-write text format often used to write HTML, readme files etc
 - the following should create the file `rna-seq.Rmd` in your working directory
 
 ```{r eval=FALSE}
@@ -57,11 +71,24 @@ library(knitr)
 spin(hair="rna-seq.R",knit=FALSE)
 ```
 
+## Not quite enough for a reproducible document
+
+- Minimally, you should record what version of R, and the packages you used.
+- use the `sessionInfo()` function
+    + e.g. for the version of R I used to make the slides
+```{r}
+sessionInfo()
+```
+
+- Lets add this to the R scripts and see what happens
+
+
 ## Defining chunks
 
-- It is not great practice 
+- It is not great practice to have one long, continuous R script
 - Better to break-up into smaller pieces; '*chunks*'
 - You can document each chunk separately
+- Easier to catch errors
 - The characteristics of each chunk can be modified
     + You might not want to print the R code for each chunk
     + or the output
@@ -139,7 +166,7 @@ data <- read.delim("path.to.my.file")
 
 - might want to load some data from disk
     + e.g. the R object from reading the data in the previous slide
-
+- your P.I. wants to see your results, but doesn't really want to know about the R code that you used
 ```
 '''{r echo=FALSE}
 load("mydata.rda")
@@ -148,6 +175,7 @@ load("mydata.rda")
 
 ## Chunk options: results
 
+- Some code or functions might produce lots of output to the screen that we don't need
 ```{r results='hide'}
 for(i in 1:100){
   print(i)
@@ -230,15 +258,6 @@ pval <- 0.05
 ```
 .....the p-value of the t-test is `r pval`, which indicates that.....
 
-```
-.....After analysis with edgeR, the number of differentially expressed genes was 'r nrow(myresults)'....
-```
-```{r echo=FALSE}
-myresults <- matrix(nrow=1245,ncol=2)
-```
-.....After analysis with edgeR, the number of differentially expressed genes was `r nrow(myresults)`....
-
-
 ## Running R code from the main text
 
 - Like the rest of our report these R statements will get updated each time we compile the report
@@ -262,34 +281,30 @@ pval <- 0.1
 ```
 .....the p-value of the t-test is `r pval`, which indicates that.....
 
-```
-.....After analysis with edgeR, the number of differentially expressed genes was 'r nrow(myresults)'....
-```
-```{r echo=FALSE}
-myresults <- matrix(nrow=124,ncol=2)
-```
-.....After analysis with edgeR, the number of differentially expressed genes was `r nrow(myresults)`....
 
 
 ## Conditional output
-
-```
-.....The statistical test was 'r ifelse(pval < 0.05, "", "not")' significant....
-```
 
 ```{r}
 pval <- 0.1
 ```
 
 
-The statistical test was `r ifelse(pval < 0.05, "", "not")` significant
-
 ```
 .....The statistical test was 'r ifelse(pval < 0.05, "", "not")' significant....
 ```
 
+
+
+The statistical test was `r ifelse(pval < 0.05, "", "not")` significant
+
 ```{r}
 pval <- 0.01
+```
+
+
+```
+.....The statistical test was 'r ifelse(pval < 0.05, "", "not")' significant....
 ```
 
 
@@ -303,3 +318,20 @@ The months of the year are 'r month.name'
 
 The months of the year are `r month.name`
 
+## Exercise
+
+- You will find a 'template' analysis `pasilla-template.Rmd` in the Day4/rep-research/ folder
+- Use this template to report on the analysis of the Pasilla RNA-seq dataset
+- Aim for something like`pasilla-analysis.pdf` 
+- Once you have a report that you are happy with
+    + Modify the report so that single-end samples are used in the analysis
+    + Modify your p-value cut-off to 0.01
+        + In each case, see how the report changes
+        
+## References
+
+- Useful reference:
+    +  Reproducible Research in R and RStudio
+        + http://christophergandrud.github.io/RepResR-RStudio/
+        + Useful exercise is to compile the book from the [source code](https://github.com/christophergandrud/Rep-Res-Book)
+    + [Implementing Reproducible Research](https://osf.io/s9tya/wiki/home/)
