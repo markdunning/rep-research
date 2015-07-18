@@ -206,7 +206,16 @@ library(DESeq)
 ```
 - Could also need `suppressPackageStartupMessages`
 
+##Chunk options: cache
 
+- `cache=TRUE` will stop certain chunks from being evaluate if their code does not change
+- speeds-up the compilation of the document
+    + we don't want to reload our dataset if we've only made a tiny change downstream
+```
+'''{r echo=FALSE,cache=TRUE}
+load("mydata.rda")
+'''
+```
 
 ## Including plots
 
