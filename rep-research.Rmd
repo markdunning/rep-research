@@ -13,7 +13,7 @@ Sidney Harris - New York Times
 
 ## Why should we do reproducible research?
 
-Five selfish reasons - Florian Markowetz [8th July 2015](http://bioinformatics-core-shared-training.github.io/rep-research-masterclass/florian/FlorianTalk.pptx)
+Five selfish reasons - [Florian Markowetz Blog](https://scientificbsides.wordpress.com/2015/07/15/five-selfish-reasons-for-working-reproducibly/)
 
 1. Avoid disaster
 2. Easier to write papers
