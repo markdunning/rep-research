@@ -2,7 +2,7 @@
 title: "Reproducible Research"
 author: "Mark Dunning"
 date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
-output: html_document
+output: slidy_presentation
 ---
 
 ## Principles of Reproducible Research
