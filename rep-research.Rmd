@@ -2,7 +2,7 @@
 title: "Reproducible Research"
 author: "Mark Dunning"
 date: '`r format(Sys.time(), "Last modified: %d %b %Y")`'
-output: slidy_presentation
+output: html_document
 ---
 
 ## Principles of Reproducible Research
@@ -122,6 +122,7 @@ output: html_document
     + Note that you need to 'save' the markdown file before you will see the compiled report in your working directory
     
 ##Text formatting
+See ***Markdown Quick Reference*** in RStudio
 
 - enclose text in \* to format in *italics*
 - enclose text in \*\* to format in **bold**
@@ -227,19 +228,19 @@ plot(1:10, jitter(1:10))
 ```
 
 ```{r echo=FALSE}
-plot(1:10, jitter(1:10))
+plot(1:10, runif(10))
 ```
 
 ## Control over plots
 
 ```
-'''{r fig.height=2,fig.align='right'}
+'''{r fig.height=2,fig.align='right', fig.height=4,fig.width=9}
 plot(1:10, jitter(1:10))
 '''
 ```
 
-```{r echo=FALSE,fig.height=3,fig.align='right'}
-plot(1:10, jitter(1:10))
+```{r echo=FALSE,fig.height=3,fig.align='right', fig.height=4,fig.width=9}
+plot(1:10, runif(10))
 ```
 
 
