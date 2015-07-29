@@ -332,11 +332,14 @@ The months of the year are `r month.name`
 
 - You will find a 'template' analysis `pasilla-template.Rmd` in the Day4/rep-research/ folder
 - Use this template to report on the analysis of the Pasilla RNA-seq dataset
-- Aim for something like`pasilla-analysis.pdf` 
+- Aim for something like `pasilla-analysis.pdf` 
 - Once you have a report that you are happy with
     + Modify the report so that single-end samples are used in the analysis
     + Modify your p-value cut-off to 0.01
         + In each case, see how the report changes
+    + Add a filtering step that removes any genes that do not have at least 1cpm reads in at least two samples (cpm=counts per million)
+        + Report how many genes are removed by doing filtering
+        + You can see the RNA-seq DE practical on Day 3 for an example of how to do this.
         
 ## References
 

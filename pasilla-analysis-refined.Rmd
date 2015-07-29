@@ -1,0 +1,88 @@
+---
+title: "Mark Dunning"
+author: "Revised Analysis of the Pasilla dataset"
+date: "29th July 2015"
+output: pdf_document
+---
+
+The counts for the pasilla dataset were read from the pasilla data package.
+
+```{r dataload,echo=FALSE,message=FALSE}
+library(edgeR)
+datafile = system.file( "extdata/pasilla_gene_counts.tsv", package="pasilla" )
+```
+
+The first few lines of the file are shown.
+
+
+```{r readCounts}
+pasillaCountTable = read.table( datafile, header=TRUE, row.names=1 )
+
+head(pasillaCountTable)
+```
+
+A design matrix was used to compare treated and untreated samples.
+
+```{r makeDesign}
+pasillaDesign = data.frame(
+  row.names = colnames( pasillaCountTable ),
+  condition = c( "untreated", "untreated", "untreated",
+                 "untreated", "treated", "treated", "treated" ),
+  libType = c( "single-end", "single-end", "paired-end",
+               "paired-end", "single-end", "paired-end", "paired-end" ) )
+
+
+pasillaDesign
+pairedSamples = pasillaDesign$libType == "paired-end"
+countTable = pasillaCountTable[ , pairedSamples ]
+condition = pasillaDesign$condition[ pairedSamples ]
+```
+
+```{r}
+y <- DGEList(counts=countTable,group=condition)
+```
+Prior to filtering, there are `r nrow(y)` genes
+
+
+```{r}
+countsPerMillion <- cpm(y)
+summary(countsPerMillion)
+#'summary' is a useful function for exploring numeric data; eg. summary(1:100)
+countCheck <- countsPerMillion > 1
+head(countCheck)
+keep <- which(rowSums(countCheck) >= 2)
+y <- y[keep,]
+summary(cpm(y))
+```
+
+After filtering, `r nrow(y)` genes remain.
+
+The analysis will use `r table(pasillaDesign$condition)[1]`  Treated and `r table(pasillaDesign$condition)[2]`  Untreated samples. Normalisation was performed with a standard edgeR protocol
+
+```{r normalise}
+
+y <- calcNormFactors(y)
+y <- estimateCommonDisp(y)
+y <- estimateTagwiseDisp(y)
+```
+
+
+Differential expression was performed between treated and untreated samples using the exact test in edgeR.
+The top hits are shown below.
+```{r doDE}
+et <- exactTest(y)
+topTags(et)
+p <- 0.01
+summary(de <- decideTestsDGE(et, p=p))
+detags <- rownames(y)[as.logical(de)]
+```
+
+The number of down-regulatated genes at a cutoff of `r p` was `r sum(abs(de)==1)`, and `r sum(de==1)` genes were up-regulated. The
+logFC and CPM of these differentially-expressed genes is shown below.
+
+
+```{r plotSmear}
+plotSmear(et, de.tags=detags)
+abline(h = c(-2, 2), col = "blue")
+```
+

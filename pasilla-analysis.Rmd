@@ -1,0 +1,69 @@
+---
+title: "Mark Dunning"
+author: "Analysis of the Pasilla dataset"
+date: "29th July 2015"
+output: pdf_document
+---
+
+The counts for the pasilla dataset were read from the [pasilla data package](http://bioconductor.org/packages/release/data/experiment/html/pasilla.html).
+
+```{r dataload,echo=FALSE,message=FALSE}
+library(edgeR)
+datafile = system.file( "extdata/pasilla_gene_counts.tsv", package="pasilla" )
+```
+
+The first few lines of the file are shown.
+
+
+```{r readCounts}
+pasillaCountTable = read.table( datafile, header=TRUE, row.names=1 )
+
+head(pasillaCountTable)
+```
+
+A design matrix was used to compare treated and untreated samples.
+
+```{r makeDesign}
+pasillaDesign = data.frame(
+  row.names = colnames( pasillaCountTable ),
+  condition = c( "untreated", "untreated", "untreated",
+                 "untreated", "treated", "treated", "treated" ),
+  libType = c( "single-end", "single-end", "paired-end",
+               "paired-end", "single-end", "paired-end", "paired-end" ) )
+
+
+pasillaDesign
+pairedSamples = pasillaDesign$libType == "paired-end"
+countTable = pasillaCountTable[ , pairedSamples ]
+condition = pasillaDesign$condition[ pairedSamples ]
+```
+
+The analysis will use `r table(pasillaDesign$condition)[1]`  Treated and `r table(pasillaDesign$condition)[2]`  Untreated samples. Normalisation was performed with a standard edgeR protocol
+
+```{r normalise}
+y <- DGEList(counts=countTable,group=condition)
+y <- calcNormFactors(y)
+y <- estimateCommonDisp(y)
+y <- estimateTagwiseDisp(y)
+```
+
+
+Differential expression was performed between treated and untreated samples using the exact test in [edgeR](http://bioconductor.org/packages/release/bioc/html/edgeR.html).
+The top hits are shown below.
+```{r doDE}
+et <- exactTest(y)
+topTags(et)
+p <- 0.05
+summary(de <- decideTestsDGE(et, p=p))
+detags <- rownames(y)[as.logical(de)]
+```
+
+The number of down-regulatated genes at a cutoff of `r p` was `r sum(abs(de)==1)`, and `r sum(de==1)` genes were up-regulated. The
+logFC and CPM of these differentially-expressed genes is shown below.
+
+
+```{r plotSmear}
+plotSmear(et, de.tags=detags)
+abline(h = c(-2, 2), col = "blue")
+```
+
