@@ -58,7 +58,7 @@ summary(de <- decideTestsDGE(et, p=p))
 detags <- rownames(y)[as.logical(de)]
 ```
 
-The number of down-regulatated genes at a cutoff of `r p` was `r sum(abs(de)==1)`, and `r sum(de==1)` genes were up-regulated. The
+The total number of differentially-expressed genes at a cutoff of `r p` was `r sum(abs(de)==1)`, and `r sum(de==1)` genes were up-regulated. The
 logFC and CPM of these differentially-expressed genes is shown below.
 
 
